@@ -50,8 +50,9 @@ So: **if you change a detector pattern, measure it.**
 python corpus/analyze.py corpus/data/*.jsonl
 ```
 
-`corpus/` holds 13,474 real tool definitions from 598 servers, with
-provenance. The number that matters is the **gate rate** — the share of a
+`corpus/` holds 13,474 real tool definitions — 12,696 from 467 deployed
+servers, plus 778 with annotations extracted from 116 source repositories —
+all provenance-tagged. The number that matters is the **gate rate** — the share of a
 (presumably benign) population that would exit 2 under the default
 `--fail-on high`. It is currently **0.2%**. A pull request that raises it
 needs to justify what it buys.

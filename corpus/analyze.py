@@ -11,10 +11,16 @@ rate. The rate tells you where to look; only reading the sample tells you
 whether the detector was right. Do not quote a number from here without having
 read the samples behind it.
 
-The headline figure is the **gate rate**: the share of servers that would exit
-2 under the default `--fail-on high`. On a benign population that is, to a
-first approximation, the share of users whose first run of this tool tells them
-something alarming and wrong.
+The headline figure is the **gate rate**: the share of *sources* that would
+exit 2 under the default `--fail-on high`. On a benign population that is, to
+a first approximation, the share of users whose first run of this tool tells
+them something alarming and wrong.
+
+"Source", not "server", on purpose. A record here is one server when it comes
+from the registry harvester and one *file* when it comes from the GitHub
+harvester — several files can belong to one project. Calling the total a
+server count overstates it, which is exactly the kind of rounding this tool
+exists to catch other people doing.
 """
 from __future__ import annotations
 
@@ -118,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
     print("CORPUS")
     print("=" * 72)
     print(f"  records            {len(records)}")
-    print(f"  usable servers     {len(usable)}")
+    print(f"  usable sources     {len(usable)}")   # servers OR source files
     print(f"  tool definitions   {n_tools}")
     if scan_errors:
         print(f"  SCAN CRASHES       {len(scan_errors)}  <-- detector bugs on real input")
@@ -156,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
     print("CI GATE IMPACT  (--fail-on high, the default)")
     print("=" * 72)
     ng = len({g[0] for g in gated})
-    print(f"  servers that would exit 2:  {ng}/{len(usable)}  ({100.0*ng/len(usable):.1f}%)")
+    print(f"  sources that would exit 2:  {ng}/{len(usable)}  ({100.0*ng/len(usable):.1f}%)")
     print("  On a benign population this approximates the false-alarm rate of")
     print("  a first run. Each one below needs reading before it counts as a FP.")
     print()

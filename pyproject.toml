@@ -15,6 +15,12 @@ authors = [
 keywords = ["mcp", "security", "prompt-injection", "agent", "supply-chain"]
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/Sra1Phani/mcpsurface"
+Repository = "https://github.com/Sra1Phani/mcpsurface"
+Issues = "https://github.com/Sra1Phani/mcpsurface/issues"
+Changelog = "https://github.com/Sra1Phani/mcpsurface/commits/main"
+
 [project.optional-dependencies]
 # jsonschema is dev-only: it validates `to_json` against the pinned report
 # schema in tests. The runtime path stays dependency-free.

@@ -53,7 +53,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 REGISTRY = "https://registry.smithery.ai"
-USER_AGENT = "mcp-trust-scanner-corpus/0.1 (+calibration research)"
+USER_AGENT = "mcpsurface-corpus/0.1 (+calibration research)"
 SOURCE_ID = "smithery-registry"
 
 

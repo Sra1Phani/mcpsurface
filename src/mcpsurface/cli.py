@@ -1,6 +1,6 @@
-"""mcp-scan CLI.
+"""mcpsurface CLI.
 
-    mcp-scan <server-url> [--json] [--llm] [--fail-on SEV]
+    mcpsurface <server-url> [--json] [--llm] [--fail-on SEV]
 
 --json       emit the machine report (what a CI Action consumes)
 --llm        enable the opt-in LLM judge (needs a provider wired in)
@@ -35,7 +35,7 @@ def _breaches(report, threshold: Severity) -> bool:
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
-        prog="mcp-scan",
+        prog="mcpsurface",
         description="Trust scan for an MCP server (static audit, not a gateway).",
         epilog="targets:  smithery:<name>  scan a registry-indexed server "
                "(works today, e.g. smithery:exa)  |  <url>  scan a server "
@@ -71,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"transport not wired: {e}\n"
               f"hint: direct URL scanning needs the MCP transport, which is not "
               f"implemented yet. To scan a registry-indexed server today, use "
-              f"'mcp-scan smithery:<name>' (e.g. smithery:exa).", file=sys.stderr)
+              f"'mcpsurface smithery:<name>' (e.g. smithery:exa).", file=sys.stderr)
         return 1
     except Exception as e:  # noqa: BLE001 - top-level guard
         print(f"error: {e}", file=sys.stderr)

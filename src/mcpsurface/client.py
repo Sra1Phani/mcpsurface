@@ -225,7 +225,7 @@ class SmitheryRegistryClient(MCPClient):
     def _transport_list_tools(self) -> list[dict[str, Any]]:
         req = urllib.request.Request(self.source_url, headers={
             "Accept": "application/json",
-            "User-Agent": f"mcp-trust-scanner/{__version__}",
+            "User-Agent": f"mcpsurface/{__version__}",
         })
         try:
             with urllib.request.urlopen(req, timeout=self.timeout) as r:

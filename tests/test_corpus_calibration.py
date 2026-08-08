@@ -17,9 +17,9 @@ attack string it must still catch.
 """
 import pytest
 
-from mcp_scan.client import MCPClient
-from mcp_scan.models import Severity
-from mcp_scan.runner import scan
+from mcpsurface.client import MCPClient
+from mcpsurface.models import Severity
+from mcpsurface.runner import scan
 
 
 class _Client(MCPClient):

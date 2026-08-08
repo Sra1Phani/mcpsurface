@@ -7,8 +7,8 @@ import json
 
 import pytest
 
-from mcp_scan import cli
-from mcp_scan.client import MCPClient
+from mcpsurface import cli
+from mcpsurface.client import MCPClient
 
 
 def _install(monkeypatch, tools, manifest=None, exc=None):

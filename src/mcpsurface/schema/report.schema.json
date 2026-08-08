@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:mcp-trust-scanner:report:0.1",
+  "$id": "urn:mcpsurface:report:0.1",
   "title": "MCP Trust Scan Report",
   "type": "object",
   "required": ["schema_version", "target", "tools_scanned", "summary", "findings"],

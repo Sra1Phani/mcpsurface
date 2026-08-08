@@ -26,9 +26,9 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
-from mcp_scan.client import MCPClient          # noqa: E402
-from mcp_scan.models import Severity           # noqa: E402
-from mcp_scan.runner import scan               # noqa: E402
+from mcpsurface.client import MCPClient          # noqa: E402
+from mcpsurface.models import Severity           # noqa: E402
+from mcpsurface.runner import scan               # noqa: E402
 
 GATING = (Severity.HIGH, Severity.CRITICAL)
 

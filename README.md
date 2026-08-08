@@ -1,13 +1,13 @@
-# mcp-trust-scanner
+# mcpsurface
 
 Point it at an MCP server, get back a trust report on the things the
 gateways skip: **tool-description poisoning, manifest integrity, and
 capability drift.**
 
 ```bash
-mcp-scan smithery:exa                    # scan a registry-indexed server
-mcp-scan smithery:gmail --json           # machine report
-mcp-scan smithery:exa --fail-on high     # CI gate (exit 2 on a finding)
+mcpsurface smithery:exa                    # scan a registry-indexed server
+mcpsurface smithery:gmail --json           # machine report
+mcpsurface smithery:exa --fail-on high     # CI gate (exit 2 on a finding)
 ```
 
 > ### Status: v0 — an **onboarding check**, not a drift monitor
@@ -16,7 +16,7 @@ mcp-scan smithery:exa --fail-on high     # CI gate (exit 2 on a finding)
 > Smithery registry, via `smithery:<name>`. Detection, the report contract,
 > and the CI exit-code gate are all live.
 >
-> **What doesn't:** `mcp-scan <url>` against a server directly. The MCP
+> **What doesn't:** `mcpsurface <url>` against a server directly. The MCP
 > transport is still a stub and exits 1 — see [Status](#status).
 >
 > **What this means:** the registry is a *second-hand* source. You are
@@ -110,7 +110,7 @@ tested — see `tests/` for end-to-end runs against fixture servers.
 
 `0` clean / under threshold · `2` finding at/above `--fail-on` · `1` error.
 Designed so a GitHub Action drops in with no glue — parse the `--json`
-output (see `src/mcp_scan/schema/report.schema.json`).
+output (see `src/mcpsurface/schema/report.schema.json`).
 
 ## License
 

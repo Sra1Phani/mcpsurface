@@ -1,4 +1,4 @@
-"""mcp-trust-scanner — static trust audit for MCP servers.
+"""mcpsurface — static trust audit for MCP servers.
 
 Point it at an MCP server and get back a report on the things gateways
 skip: tool-description poisoning, declared-vs-actual capability mismatch,

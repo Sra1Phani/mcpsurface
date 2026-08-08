@@ -4,10 +4,10 @@ _transport_list_tools() in your own harness.
 """
 import pytest
 
-from mcp_scan.client import MCPClient
-from mcp_scan.models import Manifest, ScanContext, Severity, Tool
-from mcp_scan.detectors.manifest import _same_origin, capability_digest
-from mcp_scan.runner import scan
+from mcpsurface.client import MCPClient
+from mcpsurface.models import Manifest, ScanContext, Severity, Tool
+from mcpsurface.detectors.manifest import _same_origin, capability_digest
+from mcpsurface.runner import scan
 
 
 class FixtureClient(MCPClient):
@@ -235,5 +235,5 @@ def test_agent_directed_imperative_still_high():
 
 
 if __name__ == "__main__":
-    from mcp_scan.report import to_table
+    from mcpsurface.report import to_table
     print(to_table(_run()))

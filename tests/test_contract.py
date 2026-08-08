@@ -10,12 +10,12 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from mcp_scan.client import MCPClient
-from mcp_scan.models import Severity
-from mcp_scan.report import to_json, to_table
-from mcp_scan.runner import scan
+from mcpsurface.client import MCPClient
+from mcpsurface.models import Severity
+from mcpsurface.report import to_json, to_table
+from mcpsurface.runner import scan
 
-SCHEMA_PATH = Path(__file__).resolve().parents[1] / "src" / "mcp_scan" / "schema" / "report.schema.json"
+SCHEMA_PATH = Path(__file__).resolve().parents[1] / "src" / "mcpsurface" / "schema" / "report.schema.json"
 SCHEMA = json.loads(SCHEMA_PATH.read_text())
 
 

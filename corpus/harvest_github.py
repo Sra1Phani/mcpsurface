@@ -37,7 +37,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 SOURCE_ID = "github-source"
-UA = {"User-Agent": "mcp-trust-scanner-corpus/0.1"}
+UA = {"User-Agent": "mcpsurface-corpus/0.1"}
 
 # --- TypeScript: string/comment-aware brace scanner --------------------------
 

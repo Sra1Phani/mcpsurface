@@ -6,10 +6,10 @@ code happened to do — a failure here is a real hole, not a stale expectation.
 """
 import pytest
 
-from mcp_scan.client import MCPClient
-from mcp_scan.models import Manifest, Severity
-from mcp_scan.detectors.manifest import _origin_of, _parse_timestamp, _same_origin
-from mcp_scan.runner import scan
+from mcpsurface.client import MCPClient
+from mcpsurface.models import Manifest, Severity
+from mcpsurface.detectors.manifest import _origin_of, _parse_timestamp, _same_origin
+from mcpsurface.runner import scan
 
 
 class _Client(MCPClient):
@@ -372,8 +372,8 @@ def test_manifest_absent_does_not_gate_at_default():
 
 
 def test_detectors_do_not_mutate_the_context():
-    from mcp_scan.detectors import REGISTRY
-    from mcp_scan.models import ScanContext, Tool
+    from mcpsurface.detectors import REGISTRY
+    from mcpsurface.models import ScanContext, Tool
 
     ctx = ScanContext(
         target="x",

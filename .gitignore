@@ -22,3 +22,9 @@ corpus/data/
 
 # Local agent instructions
 CLAUDE.md
+
+# Editor-local settings. These encode one contributor's tooling choices
+# (which env manager, which interpreter) and should not be imposed on
+# anyone else's checkout.
+.vscode/
+.idea/

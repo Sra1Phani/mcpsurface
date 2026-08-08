@@ -23,7 +23,7 @@ _SEV_ORDER = [Severity.INFO, Severity.LOW, Severity.MEDIUM, Severity.HIGH, Sever
 
 #: The LLM judge callable, or None when no provider is wired into this build.
 #: Wiring one is gated on human approval (it introduces a network + key
-#: dependency); see CLAUDE.md. Keep this the single place that knows, so
+#: dependency); see CONTRIBUTING.md. Keep this the single place that knows, so
 #: `--llm` can tell the user the truth instead of silently doing nothing.
 LLM_JUDGE = None
 

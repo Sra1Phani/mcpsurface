@@ -46,15 +46,24 @@ wrote the patterns. The tests agreed with their own assumptions.
 
 So: **if you change a detector pattern, measure it.**
 
+The corpus is **not committed** — it is ~10MB of third-party tool
+descriptions, and the harvesters rebuild it in a couple of minutes:
+
 ```bash
-python corpus/analyze.py corpus/data/*.jsonl
+python corpus/harvest.py --servers 500          # registry: real tools/list payloads
+python corpus/harvest_github.py --files 300     # source: definitions WITH annotations
+python corpus/analyze.py corpus/data/*.jsonl    # measure
 ```
 
-`corpus/` holds 13,474 real tool definitions — 12,696 from 467 deployed
-servers, plus 778 with annotations extracted from 116 source repositories —
-all provenance-tagged. The number that matters is the **gate rate** — the share of a
-(presumably benign) population that would exit 2 under the default
-`--fail-on high`. It is currently **0.2%**. A pull request that raises it
+That reproduces roughly 13,474 tool definitions — about 12,696 from 467
+deployed servers, plus 778 annotation-carrying ones from 116 source
+repositories, all provenance-tagged. Exact counts drift as the ecosystem
+moves; that is expected, and why the harvesters are the artefact rather
+than a frozen snapshot.
+
+The number that matters is the **gate rate** — the share of a (presumably
+benign) population that would exit 2 under the default `--fail-on high`.
+It was **0.2%** at the last calibration. A pull request that raises it
 needs to justify what it buys.
 
 Two habits that follow from this:

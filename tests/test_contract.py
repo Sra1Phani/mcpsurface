@@ -1,7 +1,7 @@
 """The machine report contract.
 
-`to_json` is pinned by schema/report.schema.json. CLAUDE.md says to keep
-them in sync; this file makes that an enforced invariant rather than a
+`to_json` is pinned by schema/report.schema.json. CONTRIBUTING.md says to
+keep them in sync; this file makes that an enforced invariant rather than a
 convention someone has to remember.
 """
 import json

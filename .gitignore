@@ -8,3 +8,10 @@ __pycache__/
 # build artifacts
 dist/
 build/
+
+# Claude Code local state — machine-specific (session ids, pids, local
+# overrides). Project-level .claude config (settings.json, agents, skills)
+# stays trackable on purpose; only the local state is excluded.
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+.claude/local/

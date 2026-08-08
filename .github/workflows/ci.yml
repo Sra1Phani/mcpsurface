@@ -12,6 +12,16 @@ on:
 permissions:
   contents: read
 
+# One live run per branch or PR. Pushing three commits in quick succession
+# otherwise starts three full five-version matrices, of which only the last
+# describes the code anyone will merge. Superseded runs are cancelled.
+#
+# Deliberately NOT applied to release.yml: cancelling a publish mid-flight
+# could leave a partial upload, and a PyPI upload cannot be redone.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Python ${{ matrix.python-version }}

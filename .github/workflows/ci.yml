@@ -73,6 +73,78 @@ jobs:
           [ "$rc" = "1" ] || { echo "expected exit 1, got $rc"; exit 1; }
           echo "$out" | grep -q "transport not wired" || exit 1
 
+  launcher:
+    name: npm launcher forwards exit codes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: pip install .
+      - run: node --check npm/bin/mcpsurface.js
+
+      # The launcher's whole job is not corrupting the 0/1/2 contract that CI
+      # consumers key off. These three cases need no network: argparse exits 0
+      # for --help and 2 for a bad choice, and a URL target exits 1 before any
+      # request is made. If a wrapper ever collapses these, this fails.
+      - name: exit 0 forwards
+        run: node npm/bin/mcpsurface.js --help > /dev/null
+      - name: exit 2 forwards
+        run: |
+          set +e; node npm/bin/mcpsurface.js x --fail-on bogus >/dev/null 2>&1; rc=$?; set -e
+          [ "$rc" = "2" ] || { echo "expected 2, got $rc"; exit 1; }
+      - name: exit 1 forwards
+        run: |
+          set +e; node npm/bin/mcpsurface.js https://example.com >/dev/null 2>&1; rc=$?; set -e
+          [ "$rc" = "1" ] || { echo "expected 1, got $rc"; exit 1; }
+
+      - name: missing Python package is a clear error, not a crash
+        run: |
+          python -m venv /tmp/bare
+          set +e
+          out=$(MCPSURFACE_PYTHON=/tmp/bare/bin/python node npm/bin/mcpsurface.js smithery:x 2>&1); rc=$?
+          set -e
+          echo "$out"
+          [ "$rc" = "1" ] || { echo "expected 1, got $rc"; exit 1; }
+          echo "$out" | grep -q "not installed" || exit 1
+
+      - name: absent interpreter is a clear error
+        run: |
+          set +e
+          out=$(MCPSURFACE_PYTHON=/nonexistent/python node npm/bin/mcpsurface.js smithery:x 2>&1); rc=$?
+          set -e
+          [ "$rc" = "1" ] || exit 1
+          echo "$out" | grep -q "no Python interpreter found" || exit 1
+
+      - name: npm package ships LICENSE and NOTICE
+        working-directory: npm
+        run: |
+          files=$(npm pack --dry-run --json | node -e \
+            "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s)[0].files.map(f=>f.path).join(' ')))")
+          echo "$files"
+          for f in LICENSE NOTICE README.md bin/mcpsurface.js; do
+            case " $files " in *" $f "*) ;; *) echo "missing $f"; exit 1;; esac
+          done
+
+      # Two packages, one product. A version skew ships an npm launcher
+      # advertising a release that does not exist on PyPI.
+      - name: npm and Python versions agree
+        run: |
+          py=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
+          np=$(node -p "require('./npm/package.json').version")
+          echo "pyproject=$py npm=$np"
+          [ "$py" = "$np" ] || { echo "version drift"; exit 1; }
+
+      # The duplicated licence files must not drift from the canonical ones.
+      - name: npm licence copies match the root
+        run: |
+          cmp LICENSE npm/LICENSE
+          cmp NOTICE npm/NOTICE
+
   build:
     name: Distributions build and validate
     runs-on: ubuntu-latest

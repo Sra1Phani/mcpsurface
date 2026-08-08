@@ -9,6 +9,9 @@ description = "Static trust audit for MCP servers: tool-description poisoning, c
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
+authors = [
+  { name = "Sravan Phani Kumar Vidiyala", email = "sravan.phani@gmail.com" },
+]
 keywords = ["mcp", "security", "prompt-injection", "agent", "supply-chain"]
 dependencies = []
 
@@ -19,6 +22,12 @@ dev = ["pytest>=7", "jsonschema>=4"]
 
 [project.scripts]
 mcpsurface = "mcpsurface.cli:main"
+
+[tool.setuptools]
+# Apache-2.0 §4(d) requires the NOTICE file to travel with redistributions,
+# so it has to be in the wheel — setuptools ships LICENSE automatically but
+# not NOTICE.
+license-files = ["LICENSE", "NOTICE"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -114,4 +114,4 @@ output (see `src/mcpsurface/schema/report.schema.json`).
 
 ## License
 
-Apache-2.0.
+Apache-2.0. Copyright 2026 Sravan Phani Kumar Vidiyala. See `LICENSE` and `NOTICE`.

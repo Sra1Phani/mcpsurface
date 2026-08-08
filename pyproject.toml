@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcpsurface"
-version = "0.2.0"
+version = "0.2.1"
 description = "Static trust audit for MCP servers: tool-description poisoning, capability drift, manifest integrity."
 readme = "README.md"
 requires-python = ">=3.9"

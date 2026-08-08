@@ -114,6 +114,18 @@ tested — see `tests/` for end-to-end runs against fixture servers.
 Designed so a GitHub Action drops in with no glue — parse the `--json`
 output (see `src/mcpsurface/schema/report.schema.json`).
 
+## Node / npx
+
+MCP tooling mostly lives in the Node ecosystem, so there is a launcher on npm:
+
+```bash
+pip install mcpsurface          # the scanner itself is Python
+npx mcpsurface smithery:exa
+```
+
+It forwards arguments and exit codes verbatim to the Python CLI — it is a
+launcher, not a reimplementation. See [`npm/`](npm/).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Commits need a DCO sign-off

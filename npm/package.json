@@ -1,0 +1,37 @@
+{
+  "name": "mcpsurface",
+  "version": "0.2.0",
+  "description": "Audit what an MCP server advertises to your agent — tool descriptions that read like instructions, and declared permissions that contradict described behaviour. Launcher for the Python CLI (requires Python 3.9+).",
+  "bin": {
+    "mcpsurface": "bin/mcpsurface.js"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "Apache-2.0",
+  "author": "Sravan Phani Kumar Vidiyala <sravan.phani@gmail.com>",
+  "homepage": "https://github.com/Sra1Phani/mcpsurface#readme",
+  "bugs": {
+    "url": "https://github.com/Sra1Phani/mcpsurface/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sra1Phani/mcpsurface.git",
+    "directory": "npm"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "prompt-injection",
+    "tool-poisoning",
+    "agent",
+    "supply-chain",
+    "audit"
+  ]
+}

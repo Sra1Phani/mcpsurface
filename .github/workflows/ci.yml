@@ -130,14 +130,19 @@ jobs:
             case " $files " in *" $f "*) ;; *) echo "missing $f"; exit 1;; esac
           done
 
-      # Two packages, one product. A version skew ships an npm launcher
-      # advertising a release that does not exist on PyPI.
-      - name: npm and Python versions agree
+      # Three declarations of one version: the package metadata, the npm
+      # launcher, and __version__ (which is sent as the registry User-Agent).
+      # A skew ships a launcher advertising a release that does not exist, or
+      # a scanner identifying itself as a version it is not. Releases are the
+      # moment this drifts, because the bump is manual and easy to half-do.
+      - name: all declared versions agree
         run: |
           py=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
           np=$(node -p "require('./npm/package.json').version")
-          echo "pyproject=$py npm=$np"
-          [ "$py" = "$np" ] || { echo "version drift"; exit 1; }
+          dunder=$(grep -m1 '__version__' src/mcpsurface/__init__.py | cut -d'"' -f2)
+          echo "pyproject=$py npm=$np __version__=$dunder"
+          [ "$py" = "$np" ] && [ "$py" = "$dunder" ] || {
+            echo "version drift across declarations"; exit 1; }
 
       # The duplicated licence files must not drift from the canonical ones.
       - name: npm licence copies match the root

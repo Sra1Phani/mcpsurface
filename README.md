@@ -112,6 +112,13 @@ tested — see `tests/` for end-to-end runs against fixture servers.
 Designed so a GitHub Action drops in with no glue — parse the `--json`
 output (see `src/mcpsurface/schema/report.schema.json`).
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Commits need a DCO sign-off
+(`git commit -s`); there is no CLA. If you change a detector pattern,
+measure it against `corpus/` first — the gate rate is the number that
+matters, and it is currently 0.2%.
+
 ## License
 
 Apache-2.0. Copyright 2026 Sravan Phani Kumar Vidiyala. See `LICENSE` and `NOTICE`.

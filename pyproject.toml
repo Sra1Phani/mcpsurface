@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-trust-scanner"
+version = "0.2.0"
+description = "Static trust audit for MCP servers: tool-description poisoning, capability drift, manifest integrity."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+keywords = ["mcp", "security", "prompt-injection", "agent", "supply-chain"]
+dependencies = []
+
+[project.optional-dependencies]
+# jsonschema is dev-only: it validates `to_json` against the pinned report
+# schema in tests. The runtime path stays dependency-free.
+dev = ["pytest>=7", "jsonschema>=4"]
+
+[project.scripts]
+mcp-scan = "mcp_scan.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mcp_scan = ["schema/*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

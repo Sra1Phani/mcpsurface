@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mcp-trust-scanner:report:0.1",
+  "title": "MCP Trust Scan Report",
+  "type": "object",
+  "required": ["schema_version", "target", "tools_scanned", "summary", "findings"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1" },
+    "target": { "type": "string" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "tools_scanned": { "type": "integer", "minimum": 0 },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "info": { "type": "integer" },
+        "low": { "type": "integer" },
+        "medium": { "type": "integer" },
+        "high": { "type": "integer" },
+        "critical": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "tool_scores": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "manifest": {
+      "type": "object",
+      "properties": {
+        "present": { "type": "boolean" },
+        "origin": { "type": ["string", "null"] },
+        "server_url": { "type": ["string", "null"] },
+        "signature_verified": { "type": ["boolean", "null"] }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["detector_id", "code", "severity", "message"],
+        "properties": {
+          "detector_id": { "type": "string" },
+          "code": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "low", "medium", "high", "critical"]
+          },
+          "tool_name": { "type": ["string", "null"] },
+          "message": { "type": "string" },
+          "evidence": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,6 +1,6 @@
 {
   "name": "mcpsurface",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Audit what an MCP server advertises to your agent — tool descriptions that read like instructions, and declared permissions that contradict described behaviour. Launcher for the Python CLI (requires Python 3.9+).",
   "bin": {
     "mcpsurface": "bin/mcpsurface.js"

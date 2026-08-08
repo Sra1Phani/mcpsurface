@@ -1,0 +1,73 @@
+name: Release
+
+# Publishes to PyPI via Trusted Publishing (OIDC). No API token is stored
+# anywhere: PyPI verifies the request came from this workflow, in this repo,
+# in the `pypi` environment. Nothing to rotate, nothing to leak.
+#
+# PyPI's trusted-publisher config must match exactly:
+#   owner:       Sra1Phani
+#   repository:  mcpsurface
+#   workflow:    release.yml      <- the FILENAME, not the `name:` above
+#   environment: pypi
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:          # allows a manual re-run if a release step fails
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test before publishing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+
+  build:
+    name: Build distributions
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install build twine
+      - run: python -m build
+      # Fail here rather than at upload: twine check catches broken metadata
+      # and a README that will not render on PyPI.
+      - run: twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    # The environment is the approval gate. Add required reviewers to it in
+    # repo settings and a release cannot reach PyPI without a human clicking
+    # approve — worth doing, because a PyPI upload cannot be undone.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/mcpsurface/
+    permissions:
+      id-token: write         # required for OIDC; this is what replaces the token
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

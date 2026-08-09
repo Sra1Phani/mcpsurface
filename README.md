@@ -116,11 +116,11 @@ output (see `src/mcpsurface/schema/report.schema.json`).
 
 ## Node / npx
 
-MCP tooling mostly lives in the Node ecosystem, so there is a launcher on npm:
+Plenty of MCP work happens in Node, so there is a launcher on npm:
 
 ```bash
-pip install mcpsurface          # the scanner itself is Python
-npx mcpsurface smithery:exa
+pip install mcpsurface                       # the scanner itself is Python
+npx @baroqueworks/mcpsurface smithery:exa
 ```
 
 It forwards arguments and exit codes verbatim to the Python CLI — it is a

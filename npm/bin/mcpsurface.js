@@ -3,10 +3,11 @@
 
 // Launcher for the Python `mcpsurface` CLI.
 //
-// MCP tooling lives largely in the Node ecosystem, so `npx mcpsurface …` is
-// the shape people reach for — but the scanner itself is Python, deliberately
-// (standard library only, no wheels to build, deterministic). This forwards to
-// it and does nothing clever in between.
+// Plenty of MCP work happens in Node, so `npx …` is a shape people reach for.
+// The scanner itself is Python, deliberately: standard library only, no wheels
+// to build, deterministic. Python is not the minority choice in MCP, so this is
+// a convenience entry point rather than the primary channel — it forwards to
+// the real CLI and does nothing clever in between.
 //
 // The one thing it must not get wrong is the **exit code**. mcpsurface's
 // contract is 0 clean / 2 a finding at or above --fail-on / 1 operational
@@ -17,7 +18,15 @@
 const { spawnSync } = require('node:child_process');
 
 const MIN_PYTHON = [3, 9];
+
+/** The Python module this launches. Same on PyPI, unscoped. */
 const MODULE = 'mcpsurface';
+
+// Read the npm coordinate rather than hard-coding it: the registry blocks the
+// unscoped name, so this package is scoped while the Python package and the
+// installed command are not. Deriving it means a help message can never
+// advertise an `npx` target that does not resolve.
+const NPM_NAME = require('../package.json').name;
 
 // Exit codes owned by *this* launcher. 1 overlaps mcpsurface's "operational
 // error", which is correct: failing to find an interpreter is exactly that.
@@ -75,7 +84,7 @@ function main() {
         `${MIN_PYTHON.join('.')}+.`,
       'Install Python, or point at one explicitly:',
       '',
-      '    MCPSURFACE_PYTHON=/path/to/python npx mcpsurface …',
+      `    MCPSURFACE_PYTHON=/path/to/python npx ${NPM_NAME} …`,
     ]);
   }
 

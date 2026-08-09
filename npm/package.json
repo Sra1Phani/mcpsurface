@@ -1,7 +1,10 @@
 {
-  "name": "mcpsurface",
+  "name": "@baroqueworks/mcpsurface",
   "version": "0.2.1",
-  "description": "Audit what an MCP server advertises to your agent — tool descriptions that read like instructions, and declared permissions that contradict described behaviour. Launcher for the Python CLI (requires Python 3.9+).",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Audit what an MCP server advertises to your agent \u2014 tool descriptions that read like instructions, and declared permissions that contradict described behaviour. Launcher for the Python CLI (requires Python 3.9+).",
   "bin": {
     "mcpsurface": "bin/mcpsurface.js"
   },

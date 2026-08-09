@@ -8,26 +8,36 @@ Audit what an MCP server advertises to your agent: tool descriptions that read
 like instructions rather than documentation, and declared permissions that
 contradict described behaviour.
 
-MCP tooling mostly lives in the Node ecosystem, so `npx mcpsurface …` is the
-shape people reach for. The scanner itself is Python on purpose — standard
-library only, no wheels to build, no model provider, deterministic output.
+Plenty of MCP work happens in Node, so `npx …` is a shape people reach for.
+The scanner itself is Python on purpose — standard library only, no wheels to
+build, no model provider, deterministic output. (Python is not the minority
+choice here: the Python MCP SDKs appear in more public source than the
+TypeScript one, so this launcher is a convenience, not the main channel.)
 
 ## Use
 
 ```bash
-pip install mcpsurface          # or: pipx install mcpsurface
-npx mcpsurface smithery:exa
+pip install mcpsurface                        # the scanner itself is Python
+npx @baroqueworks/mcpsurface smithery:exa
 ```
 
+Or install once and use the short command:
+
 ```bash
-npx mcpsurface smithery:gmail --json          # machine report
-npx mcpsurface smithery:exa --fail-on high    # CI gate
+npm i -g @baroqueworks/mcpsurface
+mcpsurface smithery:gmail --json              # machine report
+mcpsurface smithery:exa --fail-on high        # CI gate
 ```
+
+> **On the scope:** the npm registry blocks the unscoped name `mcpsurface` as
+> too similar to an unrelated package, so this launcher is published under a
+> scope. The command it installs is plain `mcpsurface`, and the Python package
+> on PyPI is `mcpsurface` — one name everywhere except the npm coordinate.
 
 If Python lives somewhere unusual, point at it directly:
 
 ```bash
-MCPSURFACE_PYTHON=/opt/homebrew/bin/python3 npx mcpsurface smithery:exa
+MCPSURFACE_PYTHON=/opt/homebrew/bin/python3 npx @baroqueworks/mcpsurface smithery:exa
 ```
 
 ## Exit codes

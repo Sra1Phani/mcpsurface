@@ -43,14 +43,34 @@ class _Corpus(MCPClient):
 
 
 def load(paths):
-    out = []
+    """Read corpus JSONL. A missing file is the expected first-run state.
+
+    `corpus/data/` is deliberately not committed, so anyone following the
+    write-up reaches this script before they have harvested anything. A
+    traceback here would be exactly the alarming-and-wrong first run this
+    project exists to argue against.
+    """
+    out, missing = [], []
     for p in paths:
-        with open(p, encoding="utf-8") as fh:
-            for line in fh:
-                if line.strip():
-                    r = json.loads(line)
-                    if not r.get("error") and r.get("tools"):
-                        out.append(r)
+        try:
+            with open(p, encoding="utf-8") as fh:
+                for line in fh:
+                    if line.strip():
+                        r = json.loads(line)
+                        if not r.get("error") and r.get("tools"):
+                            out.append(r)
+        except FileNotFoundError:
+            missing.append(p)
+    if missing and not out:
+        raise SystemExit(
+            "no corpus found: " + ", ".join(missing) + "\n\n"
+            "The corpus is not committed (it is ~10MB of third-party tool\n"
+            "descriptions). Build it first, which takes a couple of minutes:\n\n"
+            "    python corpus/harvest.py --servers 500\n\n"
+            "then re-run this against corpus/data/*.jsonl"
+        )
+    for p in missing:
+        print(f"  warning: skipped missing file {p}", file=sys.stderr)
     return out
 
 

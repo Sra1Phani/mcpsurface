@@ -55,24 +55,43 @@ class _One(MCPClient):
         return None
 
 
-def gating_codes(tool: dict) -> set:
-    """Codes at or above HIGH that this single tool definition trips."""
+def gating_codes(tool: dict):
+    """Codes at or above HIGH that this tool trips, or None if it could not be scanned.
+
+    None rather than an empty set, deliberately. A scan that raised and a tool
+    with no findings are different facts, and returning `set()` for both would
+    let an unscannable tool report as clean — hiding exactly the regression
+    this script exists to surface. Callers must handle None explicitly.
+    """
     try:
         c = _One(tool)
         rep = scan("diff", c.fetch_tools(), c.fetch_manifest())
     except Exception:                                # noqa: BLE001
-        return set()
+        return None
     return {f.code for f in rep.findings if f.severity in GATING}
 
 
-def index(records: list[dict]) -> dict:
-    """qualified_name -> {tool name -> tool dict}."""
-    out = {}
+def index(records: list[dict]):
+    """qualified_name -> {tool name -> tool dict}, plus a count of unnamed tools.
+
+    Unnamed tools are skipped rather than keyed on "", which would collapse
+    every one of them into a single entry and silently corrupt the diff. They
+    are counted and reported, because "we could not track these" is a fact
+    about the comparison, not something to drop.
+    """
+    out, unnamed = {}, 0
     for r in records:
-        tools = {t.get("name", ""): t for t in r.get("tools") or []
-                 if isinstance(t, dict)}
+        tools = {}
+        for t in r.get("tools") or []:
+            if not isinstance(t, dict):
+                continue
+            name = t.get("name")
+            if not name:
+                unnamed += 1
+                continue
+            tools[name] = t
         out[r["qualified_name"]] = tools
-    return out
+    return out, unnamed
 
 
 def main(argv=None) -> int:
@@ -82,14 +101,14 @@ def main(argv=None) -> int:
     ap.add_argument("--show", type=int, default=10, help="max examples per section")
     args = ap.parse_args(argv)
 
-    old = index(load_records([args.old]))
-    new = index(load_records([args.new]))
+    old, old_unnamed = index(load_records([args.old]))
+    new, new_unnamed = index(load_records([args.new]))
 
     added_srv = sorted(set(new) - set(old))
     removed_srv = sorted(set(old) - set(new))
     common = sorted(set(old) & set(new))
 
-    regressions, surface, edits = [], [], []
+    regressions, surface, edits, unchecked = [], [], [], []
 
     for qn in common:
         o, n = old[qn], new[qn]
@@ -103,6 +122,10 @@ def main(argv=None) -> int:
             if od == nd:
                 continue
             before, after = gating_codes(o[name]), gating_codes(n[name])
+            if before is None or after is None:
+                # Cannot compare, so cannot claim "no regression here".
+                unchecked.append((qn, name))
+                continue
             introduced = after - before
             if introduced:
                 regressions.append((qn, name, sorted(introduced), od, nd))
@@ -145,6 +168,16 @@ def main(argv=None) -> int:
         print(f"  {qn} :: {name}")
     if len(edits) > args.show:
         print(f"  … and {len(edits) - args.show} more")
+
+    if unchecked or old_unnamed or new_unnamed:
+        print()
+        print("=" * 72)
+        print("NOT COMPARED (absence of a finding here means nothing)")
+        print("=" * 72)
+        if unchecked:
+            print(f"  {len(unchecked)} tools could not be scanned: {unchecked[:5]}")
+        if old_unnamed or new_unnamed:
+            print(f"  unnamed tools skipped: {old_unnamed} in old, {new_unnamed} in new")
 
     print()
     print("=" * 72)

@@ -24,7 +24,7 @@ authors and conventions. Ordering is the registry's default, which tracks
 popularity, so this is weighted toward servers people actually use — good for
 a noise-floor estimate, not a uniform sample of the ecosystem.
 
-!! THIS SOURCE STRIPS `annotations`. Verified 2026-08-08: across 12,696 tool
+!! THIS SOURCE STRIPS `annotations`. Verified 2026-08-08: across 8,200 tool
 objects the only keys present are name / description / inputSchema /
 outputSchema. Not one carried an `annotations` block, while GitHub code search
 returns tens of thousands of real `readOnlyHint` uses — so the absence is an
@@ -73,17 +73,51 @@ def _get(url: str, timeout: int = 20, retries: int = 3) -> dict:
 
 
 def list_servers(target: int, page_size: int = 100) -> list[dict]:
-    """Registry listing, in default (popularity-ish) order."""
+    """Registry listing, deduplicated by qualifiedName.
+
+    DEDUPE IS NOT OPTIONAL HERE. The registry's pages overlap: asking for 500
+    servers returned 500 records containing only 267 distinct ones, with some
+    servers repeated five times. Ordering appears to shift between requests,
+    so a server on page 2 of one call can reappear on page 3 of the next.
+
+    Counting those raw records as servers inflated every per-server rate this
+    corpus produced, by roughly 1.75x, and did so silently because the totals
+    were self-consistent. Uniqueness is enforced here, at the point the
+    records enter the corpus, rather than left to each consumer to remember.
+    """
     out: list[dict] = []
+    seen: set[str] = set()
     page = 1
+    empty_pages = 0
     while len(out) < target:
         data = _get(f"{REGISTRY}/servers?page={page}&pageSize={page_size}")
         batch = data.get("servers") or []
         if not batch:
             break
-        out.extend(batch)
+
+        fresh = 0
+        for entry in batch:
+            qn = entry.get("qualifiedName")
+            if not qn or qn in seen:
+                continue
+            seen.add(qn)
+            out.append(entry)
+            fresh += 1
+            if len(out) >= target:
+                break
+
+        # A page that is entirely duplicates means we are going in circles.
+        # Give it a couple of chances (pages genuinely can overlap partially)
+        # then stop, rather than paging forever toward a target we cannot hit.
+        empty_pages = empty_pages + 1 if fresh == 0 else 0
+        if empty_pages >= 3:
+            print(f"  stopping: 3 consecutive pages with no new servers "
+                  f"({len(out)} unique found)", file=sys.stderr)
+            break
+
         pag = data.get("pagination") or {}
-        if page >= int(pag.get("totalPages") or 0):
+        total_pages = int(pag.get("totalPages") or 0)
+        if total_pages and page >= total_pages:
             break
         page += 1
         time.sleep(0.2)

@@ -2,7 +2,7 @@
 """Harvest tool definitions that CARRY ANNOTATIONS, from server source on GitHub.
 
 Why a second harvester: the Smithery registry strips the `annotations` field
-(verified — 12,696 tool objects, not one had it), so that corpus cannot
+(verified: 8,200 tool objects, not one had it), so that corpus cannot
 calibrate `scope_class` at all. Its two contradiction codes can never fire
 there, and UNANNOTATED_SIDE_EFFECT fires on everything. This source keeps the
 annotations, because it reads what the author actually wrote.

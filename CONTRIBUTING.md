@@ -40,7 +40,7 @@ dev-only. **Do not add a runtime dependency** without discussing it first —
 
 ## The one rule that is unusual: calibrate against the corpus
 
-This project once had a fully green test suite while mis-firing on **4.3% of
+This project once had a fully green test suite while mis-firing on **7.5% of
 real servers**, because every fixture had been written by the same person who
 wrote the patterns. The tests agreed with their own assumptions.
 
@@ -55,7 +55,7 @@ python corpus/harvest_github.py --files 300     # source: definitions WITH annot
 python corpus/analyze.py corpus/data/*.jsonl    # measure
 ```
 
-That reproduces roughly 13,474 tool definitions — about 12,696 from 467
+That reproduces roughly 8,978 tool definitions: about 8,200 from 267
 deployed servers, plus 778 annotation-carrying ones from 116 source
 repositories, all provenance-tagged. Exact counts drift as the ecosystem
 moves; that is expected, and why the harvesters are the artefact rather

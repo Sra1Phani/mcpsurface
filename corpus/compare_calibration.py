@@ -15,7 +15,6 @@ published number, not a bug to tune away.
 from __future__ import annotations
 
 import argparse
-import json
 import pathlib
 import sys
 

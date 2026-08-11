@@ -31,7 +31,9 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
+from corpus_io import load_records                     # noqa: E402
 from mcpsurface.client import MCPClient          # noqa: E402
 from mcpsurface.models import Severity           # noqa: E402
 from mcpsurface.runner import scan               # noqa: E402
@@ -52,14 +54,8 @@ class _Corpus(MCPClient):
 
 
 def load(paths: list[str]) -> list[dict]:
-    records = []
-    for p in paths:
-        with open(p, encoding="utf-8") as fh:
-            for line in fh:
-                line = line.strip()
-                if line:
-                    records.append(json.loads(line))
-    return records
+    """All records, including errored ones; the summary reports them."""
+    return load_records(paths, usable_only=False)
 
 
 def main(argv: list[str] | None = None) -> int:

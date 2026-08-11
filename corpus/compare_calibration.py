@@ -8,7 +8,7 @@ the pre-calibration patterns rebuilt from the documented changes — the
 originals predate this repository and no longer exist. Read that module's
 docstring before quoting anything from here.
 
-The point of this script is that the published 4.3% should be checkable
+The point of this script is that the published 7.5% should be checkable
 rather than taken on trust. If it disagrees, that is a finding about the
 published number, not a bug to tune away.
 """
@@ -23,6 +23,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import precalibration                                    # noqa: E402
+from corpus_io import load_records                             # noqa: E402
 from mcpsurface.client import MCPClient                  # noqa: E402
 from mcpsurface.models import Severity                   # noqa: E402
 from mcpsurface.runner import scan                       # noqa: E402
@@ -43,35 +44,8 @@ class _Corpus(MCPClient):
 
 
 def load(paths):
-    """Read corpus JSONL. A missing file is the expected first-run state.
-
-    `corpus/data/` is deliberately not committed, so anyone following the
-    write-up reaches this script before they have harvested anything. A
-    traceback here would be exactly the alarming-and-wrong first run this
-    project exists to argue against.
-    """
-    out, missing = [], []
-    for p in paths:
-        try:
-            with open(p, encoding="utf-8") as fh:
-                for line in fh:
-                    if line.strip():
-                        r = json.loads(line)
-                        if not r.get("error") and r.get("tools"):
-                            out.append(r)
-        except FileNotFoundError:
-            missing.append(p)
-    if missing and not out:
-        raise SystemExit(
-            "no corpus found: " + ", ".join(missing) + "\n\n"
-            "The corpus is not committed (it is ~10MB of third-party tool\n"
-            "descriptions). Build it first, which takes a couple of minutes:\n\n"
-            "    python corpus/harvest.py --servers 500\n\n"
-            "then re-run this against corpus/data/*.jsonl"
-        )
-    for p in missing:
-        print(f"  warning: skipped missing file {p}", file=sys.stderr)
-    return out
+    """Usable records only; a source with no tools cannot gate anything."""
+    return load_records(paths)
 
 
 def measure(records):

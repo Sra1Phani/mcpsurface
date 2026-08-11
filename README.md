@@ -57,11 +57,11 @@ optional upgrade once a provider is wired in.
 
 ### Calibrated against real servers, not fixtures
 
-The detectors are tuned against a corpus of **13,474 real tool definitions**
-— 12,696 from 467 deployed servers, plus 778 annotation-carrying ones
+The detectors are tuned against a corpus of **8,978 real tool definitions**
+— 8,200 from 267 deployed servers, plus 778 annotation-carrying ones
 extracted from 116 source repositories. The corpus itself is not committed;
 `corpus/` holds the harvesters that rebuild it, provenance included.
-That took the false-alarm rate on a CI gate from 4.3% of servers to **0.2%**
+That took the false-alarm rate on a CI gate from 7.5% of servers to **near zero**
 while *increasing* the number of documented attack shapes caught. Corpus
 strings are pinned as regression tests in `tests/test_corpus_calibration.py`
 — real strings outrank invented ones.

@@ -3,7 +3,7 @@
 
     python corpus/compare_calibration.py corpus/data/smithery-registry-*.jsonl
 
-WHAT THIS IS, PRECISELY. The published false-alarm rate of 4.3% was measured
+WHAT THIS IS, PRECISELY. The published false-alarm rate of 7.5% was measured
 before this repository existed. The first commit already contains the
 calibrated patterns, so there is no tag to check out that reproduces the
 "before" state. The originals are gone.
@@ -16,7 +16,7 @@ exactly the thing this project exists to be suspicious of.
 
 Treat any number produced here as "what a faithful reconstruction of the old
 patterns scores on this corpus", not as "the original measurement". If it
-disagrees with 4.3%, the reconstruction is evidence that the published figure
+disagrees with 7.5%, the reconstruction is evidence that the published figure
 is unverifiable — not evidence that the reconstruction is wrong.
 
 WHAT CHANGED, and therefore what is reverted here (injection.py):
@@ -37,7 +37,7 @@ and (scope_class.py):
      as a mutation.
 
 `_PROTOCOL_DESTINATION` is deliberately NOT reverted: it predates the corpus
-work, added during the earlier audit pass, and was present when 4.3% was
+work, added during the earlier audit pass, and was present when 7.5% was
 measured.
 """
 from __future__ import annotations
